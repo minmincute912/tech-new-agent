@@ -59,7 +59,7 @@ pytest && ruff check .
 1. **Key mới** (key cũ đã lộ trong chat): Gemini ở [AI Studio](https://aistudio.google.com/apikey) (bật billing, đặt budget alert), OpenRouter ở [openrouter.ai/keys](https://openrouter.ai/keys) (nạp $5, đặt credit limit cho key).
 2. **GitHub**: repo **private**; Settings → Secrets and variables → Actions thêm `GEMINI_API_KEY`, `OPENROUTER_API_KEY`, `CLOUDFLARE_API_TOKEN` (quyền *Cloudflare Pages: Edit*), `CLOUDFLARE_ACCOUNT_ID`.
 3. **Cloudflare**: tạo project Pages tên `tech-news` (Direct Upload). Tên khác thì sửa `--project-name` trong `daily.yml`.
-4. **Khoá trang**: Zero Trust → Access → Self-hosted, domain `tech-news.pages.dev` và `*.tech-news.pages.dev`, policy *Allow* chỉ email của bạn. Thử bằng cửa sổ ẩn danh: phải bị hỏi đăng nhập, nếu không thì `data.json` đang công khai.
+4. **Khoá trang**: Zero Trust → Access → Self-hosted, domain `tech-news-1rf.pages.dev` và `*.tech-news-1rf.pages.dev` (tên miền thật của project, xem trong Cloudflare), policy *Allow* chỉ email của bạn. Thử bằng cửa sổ ẩn danh: phải bị hỏi đăng nhập, nếu không thì `data.json` đang công khai.
 5. Actions → *daily* → **Run workflow** để chạy thử lần đầu.
 
 Tuỳ chọn: thêm secret `KYMA_API_KEY` và biến `KYMA_MODEL` để có fallback thứ ba.
