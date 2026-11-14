@@ -1,0 +1,80 @@
+# name decides forced categories in news.py (FORCED / DEFAULT_BY_SOURCE)
+feeds:
+- name: Hacker News
+  url: https://hnrss.org/best
+- name: Lobsters
+  url: https://lobste.rs/rss
+- name: Ars Technica
+  url: https://feeds.arstechnica.com/arstechnica/index
+- name: The New Stack
+  url: https://thenewstack.io/feed/
+- name: InfoQ
+  url: https://feed.infoq.com/
+- name: Cloudflare
+  url: https://blog.cloudflare.com/rss/
+- name: AWS News
+  url: https://aws.amazon.com/blogs/aws/feed/
+- name: Google Cloud
+  url: https://cloudblog.withgoogle.com/rss/
+- name: Azure
+  url: https://azure.microsoft.com/en-us/blog/feed/
+- name: Kubernetes
+  url: https://kubernetes.io/feed.xml
+- name: CNCF
+  url: https://www.cncf.io/feed/
+- name: Docker
+  url: https://www.docker.com/blog/feed/
+- name: HashiCorp
+  url: https://www.hashicorp.com/blog/feed.xml
+- name: BleepingComputer
+  url: https://www.bleepingcomputer.com/feed/
+- name: The Hacker News
+  url: https://feeds.feedburner.com/TheHackersNews
+- name: Snyk
+  url: https://snyk.io/blog/feed/
+- name: GitHub Blog
+  url: https://github.blog/feed/
+- name: GitHub Changelog
+  url: https://github.blog/changelog/feed/
+- name: Vercel
+  url: https://vercel.com/atom
+- name: Simon Willison
+  url: https://simonwillison.net/atom/everything/
+- name: Latent Space
+  url: https://www.latent.space/feed
+- name: Hugging Face
+  url: https://huggingface.co/blog/feed.xml
+- name: Claude Code Releases
+  url: https://github.com/anthropics/claude-code/releases.atom
+- name: Anthropic Skills Repo
+  url: https://github.com/anthropics/skills/commits/main.atom
+- name: Anthropic News
+  url: https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_news.xml
+- name: Anthropic Engineering
+  url: https://raw.githubusercontent.com/Olshansk/rss-feeds/main/feeds/feed_anthropic_engineering.xml
+- name: Product Hunt
+  url: https://www.producthunt.com/feed
+- name: Show HN
+  url: https://hnrss.org/show?points=50
+- name: 'dev.to #buildinpublic'
+  url: https://dev.to/feed/tag/buildinpublic
+- name: GitHub Trending
+  url: https://mshibanami.github.io/GitHubTrendingRSS/daily/all.xml
+- name: GitHub Trending
+  url: https://mshibanami.github.io/GitHubTrendingRSS/daily/typescript.xml
+- name: GitHub Trending
+  url: https://mshibanami.github.io/GitHubTrendingRSS/daily/python.xml
+- name: GitHub Open Source
+  url: https://github.blog/open-source/feed/
+- name: 'dev.to #opensource'
+  url: https://dev.to/feed/tag/opensource
+- name: OpenSSF
+  url: https://openssf.org/feed/
+- name: 'Google News: Hackathon VN'
+  url: https://news.google.com/rss/search?q=hackathon+Vietnam&hl=en-VN&gl=VN&ceid=VN:en
+- name: 'Google News: Hackathon VI'
+  url: https://news.google.com/rss/search?q=hackathon+Vi%E1%BB%87t+Nam&hl=vi&gl=VN&ceid=VN:vi
+- name: 'Google News: Cuộc thi'
+  url: https://news.google.com/rss/search?q=cu%E1%BB%99c+thi+l%E1%BA%ADp+tr%C3%ACnh+OR+hackathon&hl=vi&gl=VN&ceid=VN:vi
+- name: 'Google News: Hackathon SEA'
+  url: https://news.google.com/rss/search?q=hackathon+%22Southeast+Asia%22+OR+ASEAN&hl=en&gl=SG&ceid=SG:en

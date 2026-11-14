@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tech News</title>
+<style>
+  :root { --bg:#fafaf9; --card:#fff; --text:#1c1917; --muted:#78716c; --line:#e7e5e4; --accent:#2563eb; --star:#d97706; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#161412; --card:#1f1c1a; --text:#f5f5f4; --muted:#a8a29e; --line:#36312e; --accent:#60a5fa; --star:#fbbf24; }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif; }
+  main { max-width:820px; margin:0 auto; padding:16px; }
+  h1 { font-size:1.25rem; margin:8px 0 12px; }
+  .bar { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+  input, select { font:inherit; color:inherit; background:var(--card); border:1px solid var(--line); border-radius:8px; padding:8px 10px; }
+  input { flex:1 1 200px; }
+  nav { display:flex; gap:6px; overflow-x:auto; padding-bottom:8px; margin-bottom:8px; }
+  nav button { flex:none; font:inherit; font-size:.9rem; color:var(--text); background:var(--card); border:1px solid var(--line);
+    border-radius:999px; padding:6px 12px; cursor:pointer; }
+  nav button[aria-pressed="true"] { background:var(--accent); border-color:var(--accent); color:#fff; }
+  nav small { opacity:.7; margin-left:4px; }
+  article { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:10px; }
+  article a { color:var(--text); font-weight:600; text-decoration:none; }
+  article a:hover, article a:focus-visible { color:var(--accent); text-decoration:underline; }
+  .meta { color:var(--muted); font-size:.8rem; margin-top:4px; }
+  .star { color:var(--star); }
+  p { margin:6px 0 0; font-size:.95rem; }
+  #status { color:var(--muted); font-size:.85rem; margin:8px 0; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Tech News</h1>
+  <div class="bar">
+    <input id="q" type="search" placeholder="Tìm kiếm…" aria-label="Tìm kiếm">
+    <select id="range" aria-label="Khoảng thời gian">
+      <option value="1">Hôm nay</option><option value="3">3 ngày</option>
+      <option value="7" selected>7 ngày</option><option value="30">30 ngày</option><option value="0">Tất cả</option>
+    </select>
+    <select id="sort" aria-label="Sắp xếp">
+      <option value="date">Mới nhất</option><option value="sig">Quan trọng nhất</option>
+    </select>
+  </div>
+  <nav id="tabs" aria-label="Danh mục"></nav>
+  <div id="status"></div>
+  <div id="list"></div>
+</main>
+<script>
+const LABELS = { all:"Tất cả", "ai-agents":"AI & Agents", security:"Bảo mật", "cloud-infra":"Cloud & Infra",
+  fullstack:"Fullstack", opensource:"Mã nguồn mở", "build-in-public":"Build in Public", hackathons:"Hackathon", general:"Khác" };
+const $ = (id) => document.getElementById(id);
+let all = [], cat = "all";
+
+const fmtDate = (iso) => new Date(iso).toLocaleDateString("vi-VN", { day:"2-digit", month:"2-digit" });
+
+function render() {
+  const q = $("q").value.trim().toLowerCase(), days = +$("range").value;
+  const since = days ? Date.now() - days * 864e5 : 0;
+  const inRange = all.filter(a => Date.parse(a.published_at) >= since &&
+    (!q || (a.title + " " + a.summary + " " + a.source).toLowerCase().includes(q)));
+  const counts = { all: inRange.length };
+  inRange.forEach(a => counts[a.category] = (counts[a.category] || 0) + 1);
+
+  $("tabs").replaceChildren(...Object.keys(LABELS).map(k => {
+    const b = document.createElement("button");
+    b.setAttribute("aria-pressed", String(k === cat));
+    b.textContent = LABELS[k];
+    const n = document.createElement("small"); n.textContent = counts[k] || 0; b.append(n);
+    b.onclick = () => { cat = k; render(); };
+    return b;
+  }));
+
+  const shown = inRange.filter(a => cat === "all" || a.category === cat);
+  if ($("sort").value === "sig") shown.sort((x, y) => y.significance - x.significance || y.published_at.localeCompare(x.published_at));
+  $("list").replaceChildren(...shown.map(a => {
+    const el = document.createElement("article");
+    const link = document.createElement("a");
+    link.href = a.url; link.target = "_blank"; link.rel = "noopener noreferrer"; link.textContent = a.title;
+    const meta = document.createElement("div"); meta.className = "meta";
+    meta.textContent = `${a.source} · ${fmtDate(a.published_at)} · ${LABELS[a.category] || a.category} · ${a.significance}/5 `;
+    if (a.requires_review) { const s = document.createElement("span"); s.className = "star"; s.textContent = "★ nên đọc"; meta.append(s); }
+    const p = document.createElement("p"); p.textContent = a.summary;
+    el.append(link, meta, p);
+    return el;
+  }));
+  $("status").textContent = shown.length ? `${shown.length} bài` : "Không có bài nào.";
+}
+
+fetch("data.json").then(r => r.json()).then(d => {
+  all = d.articles;
+  $("status").textContent = "";
+  render();
+  document.title = "Tech News · cập nhật " + new Date(d.generated).toLocaleString("vi-VN");
+}).catch(() => { $("status").textContent = "Không tải được dữ liệu."; });
+["q", "range", "sort"].forEach(id => $(id).addEventListener("input", render));
+</script>
+</body>
+</html>

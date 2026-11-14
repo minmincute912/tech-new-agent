@@ -1,0 +1,15 @@
+# Extra sources run through the Agent-Reach CLI (no login needed). `source` decides the category like feeds.yaml.
+# undated: ignore published_at (GitHub returns repo creation date); dedup by URL means each repo shows once.
+# YouTube has no publish date, so keep --limit small; dedup by URL stops repeats.
+- source: GitHub Search
+  cmd: github search "agent skills" --limit 5
+  undated: true
+- source: GitHub Search
+  cmd: github search "claude code" --limit 5
+  undated: true
+- source: YouTube Claude Code
+  cmd: youtube search "claude code agent skills 2026" --limit 5
+- source: Web Hackathon VN
+  cmd: web search "hackathon Vietnam 2026" --limit 5
+- source: Web Hackathon VN
+  cmd: web search "hackathon Đông Nam Á 2026 đăng ký" --limit 5
