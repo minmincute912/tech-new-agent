@@ -5,7 +5,7 @@ Trang tin công nghệ cá nhân, tự cập nhật mỗi ngày, gần như khô
 
 ```mermaid
 flowchart LR
-    subgraph GH["GitHub Actions · 08:00 hằng ngày"]
+    subgraph GH["GitHub Actions · 07:17 và 18:47 hằng ngày"]
         direction LR
         F["fetch<br/>39 RSS song song"] --> D["bỏ bài đã có<br/>(theo URL)"]
         D --> L["filters<br/>từ khoá · danh mục<br/>giới hạn mỗi nguồn"]

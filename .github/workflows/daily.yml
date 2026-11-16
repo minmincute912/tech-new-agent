@@ -1,7 +1,9 @@
 name: daily
 on:
   schedule:
-    - cron: "0 1 * * *"   # 08:00 Asia/Ho_Chi_Minh
+    # Odd minutes: GitHub delays/drops schedules at :00 and :30. UTC times = 07:17 and 18:47 Asia/Ho_Chi_Minh.
+    - cron: "17 0 * * *"
+    - cron: "47 11 * * *"
   workflow_dispatch:
 
 permissions:
