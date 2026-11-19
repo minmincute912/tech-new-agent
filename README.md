@@ -85,4 +85,4 @@ Tuỳ chọn: thêm secret `KYMA_API_KEY` và biến `KYMA_MODEL` để có fall
 - Tab **Cập nhật công cụ**: release của Claude Code, MCP SDK, Codex, Gemini CLI, LangGraph, Anthropic SDK, Supabase (feed `Release: …` trong `config/feeds.yaml`).
 - Nút **☆ Lưu** trên mỗi bài (lưu trong trình duyệt), tab **Đã lưu** và nút **Xuất Markdown**.
 - Bản tin Telegram hằng ngày: 5 bài nổi bật kèm việc nên làm.
-- Chủ nhật, lượt chạy tối: `python -m tech_news draft` gửi riêng cho bạn 3 ý tưởng bài build in public (cần secret `TELEGRAM_ALERT_CHAT_ID`). Chạy tay: Actions → daily → Run workflow → bật `draft`.
+- Chủ nhật, lượt chạy tối: `python -m tech_news draft` đăng vào kênh một bài tổng kết tuần (giọng biên tập). Chạy tay: Actions → daily → Run workflow → bật `draft`.

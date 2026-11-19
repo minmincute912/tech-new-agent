@@ -1,4 +1,4 @@
-"""Weekly build-in-public post ideas: top articles of the last 7 days -> AI -> private DM to the owner."""
+"""Weekly editorial post for the channel: top articles of the last 7 days -> AI -> Telegram channel."""
 import os
 from datetime import datetime, timedelta, timezone
 
@@ -16,9 +16,9 @@ def week_top(rows, now=None, n=10):
 
 
 def draft(rows=None, call=chat, send_fn=send, provs=None):
-    token, chat_id = os.getenv("TELEGRAM_BOT_TOKEN"), os.getenv("TELEGRAM_ALERT_CHAT_ID")
+    token, chat_id = os.getenv("TELEGRAM_BOT_TOKEN"), os.getenv("TELEGRAM_CHAT_ID")
     if not (token and chat_id):
-        print("alert chat not configured, skipping draft")
+        print("telegram not configured, skipping draft")
         return
     top = week_top(rows if rows is not None else load_rows(months=2))
     if len(top) < 3:
@@ -31,7 +31,7 @@ def draft(rows=None, call=chat, send_fn=send, provs=None):
         try:
             text = (call(p, system, user) or "").strip()
             if text:
-                send_fn("✍️ Ý tưởng bài build in public tuần này\n\n" + text[:3900], token, chat_id, None)
+                send_fn("✍️ Góc nhìn tuần này\n\n" + text[:3900], token, chat_id, None)
                 print("draft sent")
                 return
         except Exception as err:  # noqa: BLE001 - try the next provider
