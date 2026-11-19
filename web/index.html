@@ -67,7 +67,7 @@ let all = [], briefs = {}, cat = "all", day = decodeURIComponent(location.hash.s
 const VN = { timeZone: "Asia/Ho_Chi_Minh" };
 // An issue = articles PUBLISHED that day (VN time). shortcut: old-dated items (e.g. hackathons found weeks later) sit on their publish day, find them under "Tất cả".
 const dayOf = (iso) => new Date(iso).toLocaleDateString("sv-SE", VN);
-// Light categories are read weekly ("Tuần" view), not in each day's list.
+// Light categories stay out of a day's "Tất cả" list; they have their own tabs.
 const LIGHT = new Set(["opensource", "build-in-public"]);
 const WD = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
@@ -79,26 +79,23 @@ function render() {
   const perDay = {};
   all.filter(a => match(a) && !LIGHT.has(a.category)).forEach(a => perDay[a.day] = (perDay[a.day] || 0) + 1);
   const dayKeys = [...new Set(all.map(a => a.day))].sort().reverse();
-  if (day !== "all" && day !== "week" && !dayKeys.includes(day)) day = dayKeys[0] || "all";
-  $("days").replaceChildren(...["all", "week", ...dayKeys].map(k => {
+  if (day !== "all" && !dayKeys.includes(day)) day = dayKeys[0] || "all";
+  $("days").replaceChildren(...["all", ...dayKeys].map(k => {
     const b = document.createElement("button");
     b.setAttribute("aria-pressed", String(k === day));
     const top = document.createElement("b"), sub = document.createElement("span");
     if (k === "all") { top.textContent = "Tất cả"; sub.textContent = all.filter(match).length; }
-    else if (k === "week") { top.textContent = "Tuần"; sub.textContent = "top 7 ngày"; }
     else { top.textContent = k.slice(8) + "/" + k.slice(5, 7); sub.textContent = WD[new Date(k + "T00:00:00Z").getUTCDay()] + " · " + (perDay[k] || 0); }
     b.append(top, sub);
     b.onclick = () => { day = k; location.hash = k; render(); };
     return b;
   }));
 
-  const dayView = day !== "all" && day !== "week";
+  const dayView = day !== "all";
   const b = briefs[day];
   $("brief").hidden = !(dayView && b && !q);
   if (!$("brief").hidden) $("briefList").replaceChildren(...b.text.split("\n").map(l => l.replace(/^\s*[-•*]\s*/, "").trim())
     .filter(Boolean).map(l => { const li = document.createElement("li"); li.textContent = l; return li; }));
-  $("tabs").hidden = day === "week";
-  if (day === "week") return renderWeek(match, dayKeys);
 
   // Hackathon posts are often published weeks before we find them, so that tab ignores the day.
   const inDay = all.filter(a => (day === "all" || a.day === day) && match(a));
@@ -134,21 +131,6 @@ function render() {
   $("topList").replaceChildren(...top.map(card));
   $("list").replaceChildren(...shown.map(card));
   $("status").textContent = shown.length + top.length ? `${shown.length + top.length} bài` : "Không có bài nào.";
-}
-
-// Weekly view: the 10 best of each light category over the 7 days up to the newest day.
-function renderWeek(match, dayKeys) {
-  const from = new Date(Date.parse((dayKeys[0] || "1970-01-01") + "T00:00:00Z") - 6 * 864e5).toISOString().slice(0, 10);
-  $("top").hidden = true;
-  const parts = [];
-  for (const c of LIGHT) {
-    const rows = all.filter(a => a.category === c && a.day >= from && match(a))
-      .sort((x, y) => y.significance - x.significance || y.published_at.localeCompare(x.published_at)).slice(0, 10);
-    const h = document.createElement("h2"); h.textContent = `${LABELS[c]} · top ${rows.length} của tuần`;
-    parts.push(h, ...rows.map(card));
-  }
-  $("list").replaceChildren(...parts);
-  $("status").textContent = "7 ngày gần nhất, đã chọn bài đáng chú ý nhất";
 }
 
 function card(a) {

@@ -70,5 +70,5 @@ Mỗi dòng trong `data/YYYY-MM.jsonl` (tháng theo `processed_at`):
 
 - `update_brief`: sau khi lưu bài, lấy tối đa 15 bài quan trọng nhất của ngày hôm nay (giờ VN, tối đa 3 bài mỗi danh mục, bỏ opensource và build-in-public), gọi AI một lần với `config/brief-prompt.md`, ghi đè `data/briefs.json[ngày]`. Lỗi thì giữ bản cũ, không làm hỏng lượt chạy.
 - `notify`: gửi một tin HTML (tóm tắt + 8 bài nổi bật + link trang) qua Bot API vào channel; cờ `sent` trong `briefs.json` chặn gửi lặp trong ngày. Tin dài hơn 4096 ký tự thì cắt bớt dòng bài ở cuối.
-- Trang: `site.build` đưa `briefs` (không kèm `sent`) và link channel vào `data.json`. Danh mục nhẹ (opensource, build-in-public) chỉ xem ở tab Tuần hoặc bấm riêng tab của nó.
+- Trang: `site.build` đưa `briefs` (không kèm `sent`) và link channel vào `data.json`. Danh mục nhẹ (opensource, build-in-public) chỉ xem ở tab riêng của chúng, không nằm trong "Tất cả" của từng ngày.
 - Giới hạn: Telegram chỉ gửi vào channel nên không có danh sách người đăng ký riêng; muốn cá nhân hoá theo người thì cần bot nhận lệnh `/start` (cần máy chủ hoặc webhook).
