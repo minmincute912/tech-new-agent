@@ -20,25 +20,11 @@ def test_top_of_day_limits_per_category_and_skips_light_and_other_days():
     assert [r["category"] for r in top] == ["security", "security", "cloud-infra"]
 
 
-def test_make_brief_falls_back_to_second_provider():
-    calls = []
-
-    def fake(p, system, user):
-        calls.append(p["name"])
-        if p["name"] == "a":
-            raise RuntimeError("429")
-        return "- dòng 1"
-    assert brief.make_brief([row(1)], [{"name": "a"}, {"name": "b"}], fake) == "- dòng 1"
-    assert calls == ["a", "b"]
-
-
 def test_format_message_escapes_html_and_stays_under_limit():
     top = [row(i, title="<b>&x " + "y" * 200) for i in range(8)]
-    msg = brief.format_message(DAY, "- a < b", top, "https://s.example")
-    assert "&lt;b&gt;" in msg and "<b>&x" not in msg and "a &lt; b" in msg
+    msg = brief.format_message(DAY, top, "https://s.example")
+    assert "&lt;b&gt;" in msg and "<b>&x" not in msg
     assert len(msg) <= 4096
-    long = brief.format_message(DAY, "x" * 3900, top, "https://s.example")
-    assert len(long) <= 4096 and 'href="https://s.example"' in long  # the site link survives truncation
 
 
 def test_notify_sends_once_and_skips_without_token(tmp_path, monkeypatch):
@@ -57,12 +43,10 @@ def test_notify_sends_once_and_skips_without_token(tmp_path, monkeypatch):
     assert len(sent) == 1 and sent[0][2] == "@chan"
 
 
-def test_build_exposes_briefs_without_sent_flag_and_telegram_link(tmp_path, monkeypatch):
+def test_build_exposes_telegram_link(tmp_path, monkeypatch):
     monkeypatch.setenv("TELEGRAM_CHAT_ID", "@technews")
-    now = brief.today_vn()
     (tmp_path / "data").mkdir()
-    (tmp_path / "data" / "briefs.json").write_text(json.dumps({now: {"text": "- hi", "n": 3, "sent": True}}))
     append_rows([row(1)], tmp_path / "data")
     build(tmp_path / "data", tmp_path / "public")
     out = json.loads((tmp_path / "public" / "data.json").read_text())
-    assert out["briefs"] == {now: {"text": "- hi"}} and out["telegram"] == "https://t.me/technews"
+    assert "briefs" not in out and out["telegram"] == "https://t.me/technews"

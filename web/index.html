@@ -34,9 +34,6 @@
   .meta { color:var(--muted); font-size:.8rem; margin-top:4px; }
   .star { color:var(--star); }
   #sub { font-size:.8rem; font-weight:500; margin-left:10px; color:#fff; background:var(--accent); border-radius:999px; padding:4px 10px; text-decoration:none; vertical-align:middle; }
-  #brief { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:4px 14px 10px; margin-bottom:10px; }
-  #brief ul { margin:0; padding-left:20px; font-size:.95rem; }
-  #brief li { margin:4px 0; }
   h2 { font-size:1rem; margin:12px 0 8px; }
   #top article { border-color:var(--star); }
   p { margin:6px 0 0; font-size:.95rem; }
@@ -55,7 +52,6 @@
   <nav id="days" aria-label="Chọn ngày"></nav>
   <nav id="tabs" aria-label="Danh mục"></nav>
   <div id="status"></div>
-  <section id="brief" hidden><h2>Tóm tắt ngày</h2><ul id="briefList"></ul></section>
   <section id="top" hidden><h2>★ Nổi bật trong ngày</h2><div id="topList"></div></section>
   <div id="list"></div>
 </main>
@@ -63,7 +59,7 @@
 const LABELS = { all:"Tất cả", "ai-agents":"AI & Agents", security:"Bảo mật", "cloud-infra":"Cloud & Infra",
   fullstack:"Fullstack", opensource:"Mã nguồn mở", "build-in-public":"Build in Public", hackathons:"Hackathon", general:"Khác" };
 const $ = (id) => document.getElementById(id);
-let all = [], briefs = {}, cat = "all", day = decodeURIComponent(location.hash.slice(1)) || "";
+let all = [], cat = "all", day = decodeURIComponent(location.hash.slice(1)) || "";
 const VN = { timeZone: "Asia/Ho_Chi_Minh" };
 // An issue = articles PUBLISHED that day (VN time). shortcut: old-dated items (e.g. hackathons found weeks later) sit on their publish day, find them under "Tất cả".
 const dayOf = (iso) => new Date(iso).toLocaleDateString("sv-SE", VN);
@@ -92,10 +88,6 @@ function render() {
   }));
 
   const dayView = day !== "all";
-  const b = briefs[day];
-  $("brief").hidden = !(dayView && b && !q);
-  if (!$("brief").hidden) $("briefList").replaceChildren(...b.text.split("\n").map(l => l.replace(/^\s*[-•*]\s*/, "").trim())
-    .filter(Boolean).map(l => { const li = document.createElement("li"); li.textContent = l; return li; }));
 
   // Hackathon posts are often published weeks before we find them, so that tab ignores the day.
   const inDay = all.filter(a => (day === "all" || a.day === day) && match(a));
@@ -146,7 +138,6 @@ function card(a) {
 }
 
 fetch("data.json").then(r => r.json()).then(d => {
-  briefs = d.briefs || {};
   if (d.telegram) { $("sub").href = d.telegram; $("sub").hidden = false; }
   all = d.articles.map(a => ({ ...a, day: dayOf(a.published_at) }));
   $("status").textContent = "";

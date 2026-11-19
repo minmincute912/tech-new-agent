@@ -1,4 +1,4 @@
-"""Daily AI brief (one LLM call per day) and the Telegram digest built from it."""
+"""Telegram digest of the day's top articles; briefs.json only remembers which days were sent."""
 import html
 import json
 import os
@@ -7,8 +7,7 @@ from pathlib import Path
 
 import requests
 
-from .config import BRIEF_PROMPT_FILE, BRIEFS_FILE, SITE_URL
-from .llm import chat
+from .config import BRIEFS_FILE, SITE_URL
 from .store import load_rows
 
 VN = timezone(timedelta(hours=7))
@@ -46,38 +45,9 @@ def top_of_day(rows, day, n=10, per_cat=2):
     return out
 
 
-def make_brief(top, provs, call=chat):
-    """Plain-text brief, or None when every provider fails."""
-    system = BRIEF_PROMPT_FILE.read_text("utf-8")
-    user = "\n".join(f"[{i}] {r['category']} | {r['significance']} | {r['title']}: {r['summary']}"
-                     for i, r in enumerate(top, 1))
-    for p in provs:
-        try:
-            text = (call(p, system, user) or "").strip()
-            if text:
-                return text
-        except Exception as err:  # noqa: BLE001 - try the next provider
-            print(f"  brief via {p['name']} failed: {err}")
-    return None
-
-
-def update_brief(rows, provs, day, call=chat):
-    """(Re)write today's brief; a later run of the same day replaces it. Keeps the `sent` flag."""
-    top = top_of_day(rows, day, 15, 3)
-    if len(top) < 3:
-        return
-    text = make_brief(top, provs, call)
-    if text:
-        briefs = load_briefs()
-        briefs.setdefault(day, {}).update(text=text, n=len(top))
-        save_briefs(briefs)
-
-
-def format_message(day, brief, top, site_url=SITE_URL, limit=4000):
+def format_message(day, top, site_url=SITE_URL, limit=4000):
     """Telegram HTML message; article lines are dropped from the end if it would exceed the 4096 limit."""
     head = f"📰 <b>Tech News · {day[8:]}/{day[5:7]}</b>\n"
-    if brief:
-        head += "\n" + "\n".join(html.escape(line.strip()) for line in brief.splitlines() if line.strip()) + "\n"
     foot = f'\n👉 <a href="{html.escape(site_url, quote=True)}">Xem tất cả tin</a>'
     lines = [f'{i}. <a href="{html.escape(r["url"], quote=True)}">{html.escape(r["title"])}</a> '
              f'<i>({html.escape(r["source"])})</i>' for i, r in enumerate(top, 1)]
@@ -107,7 +77,7 @@ def notify(send_fn=send, rows=None, day=None):
     if not top:
         print(f"nothing to send for {day}")
         return
-    send_fn(format_message(day, briefs.get(day, {}).get("text", ""), top), token, chat_id)
+    send_fn(format_message(day, top), token, chat_id)
     briefs.setdefault(day, {})["sent"] = True
     save_briefs(briefs)
     print(f"digest for {day} sent")
