@@ -6,7 +6,7 @@
 sequenceDiagram
     participant GA as GitHub Actions
     participant P as pipeline
-    participant R as 39 RSS
+    participant R as 40 RSS
     participant L as llm (Gemini → OpenRouter → Kyma)
     participant D as data/*.jsonl
     participant CF as Cloudflare Pages

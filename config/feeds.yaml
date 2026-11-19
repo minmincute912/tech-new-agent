@@ -78,3 +78,5 @@ feeds:
   url: https://news.google.com/rss/search?q=cu%E1%BB%99c+thi+l%E1%BA%ADp+tr%C3%ACnh+OR+hackathon&hl=vi&gl=VN&ceid=VN:vi
 - name: 'Google News: Hackathon SEA'
   url: https://news.google.com/rss/search?q=hackathon+%22Southeast+Asia%22+OR+ASEAN&hl=en&gl=SG&ceid=SG:en
+- name: Viblo
+  url: https://viblo.asia/rss

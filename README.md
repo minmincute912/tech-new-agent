@@ -1,13 +1,13 @@
 # Tech News
 
 Trang tin công nghệ cá nhân, tự cập nhật mỗi ngày, gần như không tốn chi phí hạ tầng.
-Đọc 39 nguồn RSS → lọc nhiễu → AI phân loại và tóm tắt tiếng Việt → lưu vào git → website tĩnh chỉ mình bạn xem được.
+Đọc 40 nguồn RSS → lọc nhiễu → AI phân loại và tóm tắt tiếng Việt → lưu vào git → website tĩnh chỉ mình bạn xem được.
 
 ```mermaid
 flowchart LR
     subgraph GH["GitHub Actions · 07:17 và 18:47 hằng ngày"]
         direction LR
-        F["fetch<br/>39 RSS song song"] --> D["bỏ bài đã có<br/>(theo URL)"]
+        F["fetch<br/>40 RSS song song"] --> D["bỏ bài đã có<br/>(theo URL)"]
         D --> L["filters<br/>từ khoá · danh mục<br/>giới hạn mỗi nguồn"]
         L --> A["llm<br/>8 bài / lần gọi"]
         A --> S[("data/YYYY-MM.jsonl<br/>commit vào repo")]
