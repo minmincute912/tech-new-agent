@@ -1,6 +1,6 @@
 {
  "2026-11-19": {
   "n": 13,
-  "text": "- Kỹ sư hạ tầng cần cập nhật NGINX ngay lập tức để vá lỗ hổng RCE CVE-2026-123007 tồn tại 10 năm qua trên HTTP/2.\n- OpenJDK và Oracle đã vá lỗ hổng Java4Shell gây RCE nghiêm trọng; các kỹ sư infra cần kiểm tra ngay các hệ thống ảnh hưởng.\n- OpenAI dùng API tạo mã khai thác cho 948 lỗ hổng nhân Linux với 1,2 triệu USD, cho thấy năng lực khai thác bằng AI.\n- AWS Lambda nay hỗ trợ GPU instances cho serverless inference với vLLM và SGLang, giúp chạy LLM không cần quản lý cluster."
+  "text": "- Vá ngay lỗ hổng RCE CVE-2026-123007 (NGINX2Root) trong NGINX HTTP/2 có từ phiên bản 1.9.5 bằng cách cập nhật bản vá lập tức.\n- OpenAI chi 1,2 triệu USD dùng API tự động tạo mã khai thác 948 lỗ hổng nhân Linux, cho thấy năng lực tìm kiếm bằng AI đáng sợ.\n- Sử dụng cổng kiểm soát thay vì prompt để ép buộc AI agent tuân thủ quy tắc, kết hợp bổ sung log và trace cho agentic app.\n- Discord viết lại ứng dụng Desktop và Mobile bằng nhân Rust và framework render của Zed nhằm tăng tốc độ xử lý bằng GPU."
  }
 }
