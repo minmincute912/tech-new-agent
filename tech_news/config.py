@@ -1,4 +1,5 @@
 """Paths and tunables shared by every module."""
+import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -8,6 +9,9 @@ FEEDS_FILE = ROOT / "config" / "feeds.yaml"
 REACH_FILE = ROOT / "config" / "reach.yaml"
 PROMPT_FILE = ROOT / "config" / "classify-prompt.md"
 SITE_TEMPLATE = ROOT / "web" / "index.html"
+BRIEF_PROMPT_FILE = ROOT / "config" / "brief-prompt.md"
+BRIEFS_FILE = DATA / "briefs.json"   # {"YYYY-MM-DD": {"text": ..., "n": ..., "sent": bool}}
+SITE_URL = os.getenv("SITE_URL", "https://tech-news-1rf.pages.dev")
 
 UA = "Mozilla/5.0 (compatible; tech-news-personal/1.0)"
 BATCH = 8            # articles per AI call: keeps us inside free-tier rate limits and cuts tokens

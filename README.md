@@ -64,6 +64,14 @@ pytest && ruff check .
 
 Tuỳ chọn: thêm secret `KYMA_API_KEY` và biến `KYMA_MODEL` để có fallback thứ ba.
 
+## Tóm tắt ngày và Telegram
+
+- Mỗi lượt chạy, AI viết lại **tóm tắt ngày** (3–5 dòng, một lần gọi) lưu trong `data/briefs.json`, hiện đầu trang mỗi ngày.
+- Tab **Tuần**: top 10 của tuần cho Mã nguồn mở và Build in Public (hai danh mục này không còn nằm trong danh sách từng ngày).
+- **Gửi Telegram** (`python -m tech_news notify`): một bản tin mỗi ngày (tóm tắt + 8 bài nổi bật + link trang) vào một **channel công khai**, ai cũng vào channel để nhận tin. Chạy ở lần chạy buổi tối hoặc khi bấm Run workflow, ngày nào đã gửi thì bỏ qua.
+- Thiết lập: tạo bot ở [@BotFather](https://t.me/BotFather) → tạo channel công khai (đặt username, ví dụ `@technews_vn`) → thêm bot làm **admin có quyền đăng bài** → thêm secret `TELEGRAM_BOT_TOKEN` và `TELEGRAM_CHAT_ID` (= `@technews_vn`). Không có hai secret này thì bước gửi tự bỏ qua. Có `TELEGRAM_CHAT_ID` dạng `@tên` thì trang tự hiện nút "Nhận tin qua Telegram".
+- Muốn người khác đọc trang qua link trong bản tin thì **không được khoá bằng Cloudflare Access**; trang công khai nghĩa là ai cũng đọc được `data.json`.
+
 ## Ghi chú vận hành
 
 - Batch AI lỗi ở mọi provider thì **không được lưu**, hôm sau tự thử lại (cửa sổ tuổi bài 3 ngày, hackathon 45 ngày).

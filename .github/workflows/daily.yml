@@ -30,6 +30,14 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}  # GitHub search: 60/h anonymous, 1000/h with token
+      # Once per day: the evening schedule, or a manual run (notify skips a day already sent).
+      - name: Send Telegram digest
+        if: github.event_name == 'workflow_dispatch' || github.event.schedule == '47 11 * * *'
+        continue-on-error: true
+        run: python -m tech_news notify
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       - name: Commit data
         run: |
           git config user.name "news-bot"
@@ -37,6 +45,8 @@ jobs:
           git add data
           git diff --cached --quiet || (git commit -m "data: $(date -u +%F)" && git push)
       - run: python -m tech_news build
+        env:
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}  # only to show the Subscribe button
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:

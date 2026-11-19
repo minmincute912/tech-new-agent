@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 
 import yaml
 
+from .brief import today_vn, update_brief
 from .config import BATCH, FEEDS_FILE, GAP_SECONDS, PROMPT_FILE
 from .fetch import fetch_all
 from .filters import select
@@ -43,5 +44,10 @@ def run(dry=False):
         append_rows(rows)
         ok += len(rows)
     print(f"stored {ok} articles, {bad} batches failed (retried next run)")
+    if provs:
+        try:  # the brief is a bonus: its failure must not fail the run
+            update_brief(load_rows(), provs, today_vn())
+        except Exception as err:  # noqa: BLE001
+            print(f"  brief failed: {err}", file=sys.stderr)
     if bad and not ok:
         sys.exit(1)
