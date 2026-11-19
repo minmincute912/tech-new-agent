@@ -1,7 +1,1 @@
-{
- "2026-11-19": {
-  "n": 13,
-  "sent": true,
-  "text": "- Vá ngay lỗ hổng RCE CVE-2026-123007 (NGINX2Root) trong NGINX HTTP/2 có từ phiên bản 1.9.5 bằng cách cập nhật bản vá lập tức.\n- OpenAI chi 1,2 triệu USD dùng API tự động tạo mã khai thác 948 lỗ hổng nhân Linux, cho thấy năng lực tìm kiếm bằng AI đáng sợ.\n- Sử dụng cổng kiểm soát thay vì prompt để ép buộc AI agent tuân thủ quy tắc, kết hợp bổ sung log và trace cho agentic app.\n- Discord viết lại ứng dụng Desktop và Mobile bằng nhân Rust và framework render của Zed nhằm tăng tốc độ xử lý bằng GPU."
- }
-}
+{}
