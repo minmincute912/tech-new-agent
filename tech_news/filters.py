@@ -27,8 +27,8 @@ FORCED = _table([
     (r"^(Claude Code Releases|Anthropic .*)$", "ai-agents"),
 ])
 DEFAULT_BY_SOURCE = _table([
-    (r"^(Google Cloud|AWS News|Azure|Cloudflare|Kubernetes|CNCF|Docker|HashiCorp)$", "cloud-infra"),
-    (r"^(BleepingComputer|The Hacker News|Snyk)$", "security"),
+    (r"^(Google Cloud|AWS News|AWS Architecture Blog|Azure|Cloudflare|Kubernetes|CNCF|Docker|HashiCorp|dev\.to #kubernetes|dev\.to #aws)$", "cloud-infra"),
+    (r"^(BleepingComputer|The Hacker News|Snyk|GitGuardian|Trail of Bits|GitHub Security Lab|AWS Security Blog|Datadog Security Labs|Unit 42|Krebs on Security|Chainguard|dev\.to #devsecops)$", "security"),
     (r"^(Simon Willison|Latent Space|Hugging Face)$", "ai-agents"),
     (r"^(GitHub Blog|Vercel)$", "fullstack"),
 ])
