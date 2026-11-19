@@ -25,7 +25,7 @@ def draft(rows=None, call=chat, send_fn=send, provs=None):
         print("not enough articles for a draft")
         return
     system = DRAFT_PROMPT_FILE.read_text("utf-8")
-    user = "\n".join(f"[{i}] {r['kind'] if 'kind' in r else 'news'} | {r['title']}: {r['summary']} {r.get('action', '')} ({r['url']})"
+    user = "\n".join(f"[{i}] {r.get('kind', 'news')} | {r['title']}: {r['summary']} {r.get('action', '')} ({r['url']})"
                      for i, r in enumerate(top, 1))
     for p in provs if provs is not None else providers():
         try:
