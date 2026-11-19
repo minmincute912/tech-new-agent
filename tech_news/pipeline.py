@@ -20,7 +20,7 @@ def run(dry=False):
     entries += extra
     if not entries:
         sys.exit("no feed returned any entry")
-    picked = select(entries, {r["url"] for r in load_rows()}, time.time())
+    picked = select(entries, {r["url"] for r in load_rows(months=3)}, time.time())
     print(f"{len(entries)} entries from {len(feeds) - len(failed)}/{len(feeds)} feeds + {len(extra)} via agent-reach"
           f" -> {len(picked)} new to classify")
     if dry:

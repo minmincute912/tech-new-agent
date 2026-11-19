@@ -76,5 +76,5 @@ Tuỳ chọn: thêm secret `KYMA_API_KEY` và biến `KYMA_MODEL` để có fall
 
 - Batch AI lỗi ở mọi provider thì **không được lưu**, hôm sau tự thử lại (cửa sổ tuổi bài 3 ngày, hackathon 45 ngày).
 - Workflow lỗi thì GitHub gửi email. Repo im lặng 60 ngày thì GitHub tắt lịch chạy; commit dữ liệu hằng ngày giữ nó sống.
-- Website hiển thị 90 ngày gần nhất, dữ liệu cũ hơn vẫn nằm trong `data/`.
+- Website hiển thị 30 ngày gần nhất, dữ liệu cũ hơn vẫn nằm trong `data/`.
 - Chi phí AI ước tính dưới $1/tháng (~80 bài/ngày); hạ tầng $0.

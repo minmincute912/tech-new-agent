@@ -5,9 +5,12 @@ from pathlib import Path
 from .config import DATA
 
 
-def load_rows(data_dir: Path = DATA):
-    return [json.loads(line) for f in sorted(data_dir.glob("*.jsonl"))
-            for line in f.read_text("utf-8").splitlines() if line]
+def load_rows(data_dir: Path = DATA, months=None):
+    """All rows, or only the newest `months` monthly files so run time stays flat as history grows."""
+    files = sorted(data_dir.glob("*.jsonl"))
+    if months:
+        files = files[-months:]
+    return [json.loads(line) for f in files for line in f.read_text("utf-8").splitlines() if line]
 
 
 def append_rows(rows, data_dir: Path = DATA):

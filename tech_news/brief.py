@@ -73,7 +73,7 @@ def notify(send_fn=send, rows=None, day=None):
     if briefs.get(day, {}).get("sent"):
         print(f"digest for {day} already sent")
         return
-    top = top_of_day(rows if rows is not None else load_rows(), day, 8)
+    top = top_of_day(rows if rows is not None else load_rows(months=1), day, 8)
     if not top:
         print(f"nothing to send for {day}")
         return

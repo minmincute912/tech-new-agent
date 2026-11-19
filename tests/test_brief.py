@@ -50,3 +50,12 @@ def test_build_exposes_telegram_link(tmp_path, monkeypatch):
     build(tmp_path / "data", tmp_path / "public")
     out = json.loads((tmp_path / "public" / "data.json").read_text())
     assert "briefs" not in out and out["telegram"] == "https://t.me/technews"
+
+
+def test_load_rows_months_limits_to_newest_files(tmp_path):
+    from tech_news.store import load_rows
+    (tmp_path / "2026-09.jsonl").write_text('{"a": 1}\n')
+    (tmp_path / "2026-10.jsonl").write_text('{"a": 2}\n')
+    (tmp_path / "2026-11.jsonl").write_text('{"a": 3}\n')
+    assert [r["a"] for r in load_rows(tmp_path, months=2)] == [2, 3]
+    assert len(load_rows(tmp_path)) == 3

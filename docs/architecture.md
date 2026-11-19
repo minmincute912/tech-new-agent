@@ -63,7 +63,7 @@ Mỗi dòng trong `data/YYYY-MM.jsonl` (tháng theo `processed_at`):
 - **Không server, không database:** chỉ một người dùng, pipeline chạy ~1–2 phút/ngày; file JSONL trong git là đủ (~30k bài/năm) và lịch sử git là backup. *Nâng cấp khi:* cần truy vấn phức tạp hoặc nhiều người dùng → SQLite/Postgres.
 - **Trang tĩnh + Cloudflare Access:** `data.json` chứa toàn bộ dữ liệu, bảo vệ bằng Access, không bằng việc giấu URL.
 - **X/Twitter không có:** cần đăng nhập và trình duyệt chạy lâu dài, không hợp môi trường Actions. *Nâng cấp khi:* thật sự cần → chạy cùng pipeline trên một máy luôn bật cùng [Agent-Reach](https://github.com/Panniantong/Agent-Reach).
-- **Website chỉ hiện 90 ngày** và tải cả `data.json` một lần (~100 KB cho 155 bài); *nâng cấp khi:* file vượt vài MB thì tách theo tháng.
+- **Website chỉ hiện 30 ngày** và tải cả `data.json` một lần (~2 MB, nén gzip còn khoảng 25%); *nâng cấp khi:* file vượt vài MB thì tách theo tháng.
 - Lịch Actions có thể trễ hàng giờ hoặc bị bỏ; vì vậy chạy 2 lần/ngày vào phút lẻ (07:17 và 18:47 giờ VN), dữ liệu chống trùng theo URL nên chạy lại không sinh bài trùng.
 
 ## Tóm tắt ngày và bản tin Telegram (`brief`)

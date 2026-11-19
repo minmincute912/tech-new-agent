@@ -11,7 +11,7 @@ from .store import load_rows
 
 def build(data_dir: Path = DATA, out_dir: Path = PUBLIC):
     cutoff = (datetime.now(timezone.utc) - timedelta(days=SITE_DAYS)).isoformat()
-    rows = {r["url"]: r for r in load_rows(data_dir) if r["category"] != "noise" and r["published_at"] >= cutoff}
+    rows = {r["url"]: r for r in load_rows(data_dir, months=2) if r["category"] != "noise" and r["published_at"] >= cutoff}
     arts = sorted(rows.values(), key=lambda r: r["published_at"], reverse=True)
     out_dir.mkdir(exist_ok=True)
     shutil.copy(SITE_TEMPLATE, out_dir / "index.html")
