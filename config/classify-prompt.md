@@ -7,6 +7,7 @@ You receive numbered articles (title, source, snippet). For EACH article return 
 ## Fields
 - category: exactly one slug from the list below. Never invent a slug.
 - vietnamese_title: natural Vietnamese translation of the title. Keep product, company and technology names in English.
+  When the title is only a repository or product name (for example "owner/repo" or a bare name), write "name — what it does" with a short Vietnamese description of at most 8 words.
 - summary: at most 2 sentences in Vietnamese. Say what happened and why a practitioner should care. No hype, no marketing language, no repeating the title.
 - significance: integer 1-5 for how much THIS reader should care.
   5 = act on it today (actively exploited vulnerability in common infra, major release of a tool they use, big shift in how AI tools are used)
@@ -14,6 +15,7 @@ You receive numbered articles (title, source, snippet). For EACH article return 
   3 = useful to know
   2 = minor or incremental
   1 = barely relevant
+  Be strict. Over a week, about 1 in 20 articles should get 5, 1 in 8 should get 4, and most should get 2 or 3. When unsure, pick the lower number. Trending repositories and Product Hunt launches are 3 unless they are clearly exceptional.
 
 ## Categories (choose the reader's PRIMARY intent in opening this article)
 - ai-agents: using AI to work. Claude, Claude Code, skills, agents, MCP, Copilot and other coding assistants, prompting techniques, agent frameworks, evals, and model releases from AI labs.

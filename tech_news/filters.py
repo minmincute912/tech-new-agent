@@ -2,6 +2,8 @@
 import re
 
 MAX_PER_CATEGORY = 12
+# Forced-source categories (GitHub Trending, Product Hunt...) always have candidates, so cap them lower to leave room for the rest.
+CATEGORY_CAP = {"opensource": 6, "build-in-public": 6, "ai-agents": 15}
 MAX_PER_SOURCE = 3
 MAX_PER_FORCED_SOURCE = 6
 MAX_TOTAL = 80
@@ -89,7 +91,7 @@ def select(entries, known, now):
     per_cat, per_src, picked = {}, {}, []
     for a in ranked:
         cap = MAX_PER_FORCED_SOURCE if a["forced"] else MAX_PER_SOURCE
-        if per_cat.get(a["category"], 0) >= MAX_PER_CATEGORY or per_src.get(a["source"], 0) >= cap:
+        if per_cat.get(a["category"], 0) >= CATEGORY_CAP.get(a["category"], MAX_PER_CATEGORY) or per_src.get(a["source"], 0) >= cap:
             continue
         per_cat[a["category"]] = per_cat.get(a["category"], 0) + 1
         per_src[a["source"]] = per_src.get(a["source"], 0) + 1

@@ -10,7 +10,7 @@ BATCH = [{"title": "T1", "source": "InfoQ", "description": "d", "url": "u1", "ca
           "forced": False, "published": NOW},
          {"title": "T2", "source": "Product Hunt", "description": "d", "url": "u2", "category": "build-in-public",
           "forced": True, "published": NOW}]
-GOOD = '```json\n[{"id":1,"category":"security","vietnamese_title":"V1","summary":"s","significance":4},' \
+GOOD = '```json\n[{"id":1,"category":"security","vietnamese_title":"V1","summary":"s","significance":5},' \
        '{"id":2,"category":"general","vietnamese_title":"V2","summary":"s","significance":2}]\n```'
 
 

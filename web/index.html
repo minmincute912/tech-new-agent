@@ -33,6 +33,8 @@
   article a:hover, article a:focus-visible { color:var(--accent); text-decoration:underline; }
   .meta { color:var(--muted); font-size:.8rem; margin-top:4px; }
   .star { color:var(--star); }
+  h2 { font-size:1rem; margin:12px 0 8px; }
+  #top article { border-color:var(--star); }
   p { margin:6px 0 0; font-size:.95rem; }
   #status { color:var(--muted); font-size:.85rem; margin:8px 0; }
 </style>
@@ -49,6 +51,7 @@
   <nav id="days" aria-label="Chọn ngày"></nav>
   <nav id="tabs" aria-label="Danh mục"></nav>
   <div id="status"></div>
+  <section id="top" hidden><h2>★ Nổi bật trong ngày</h2><div id="topList"></div></section>
   <div id="list"></div>
 </main>
 <script>
@@ -81,9 +84,11 @@ function render() {
     b.onclick = () => { day = k; location.hash = k; render(); };
     return b;
   }));
-  const inRange = all.filter(a => (day === "all" || a.day === day) && match(a));
-  const counts = { all: inRange.length };
-  inRange.forEach(a => counts[a.category] = (counts[a.category] || 0) + 1);
+  // Hackathon posts are often published weeks before we find them, so that tab ignores the day.
+  const inDay = all.filter(a => (day === "all" || a.day === day) && match(a));
+  const hack = all.filter(a => a.category === "hackathons" && match(a));
+  const counts = { all: inDay.length, hackathons: hack.length };
+  inDay.forEach(a => { if (a.category !== "hackathons") counts[a.category] = (counts[a.category] || 0) + 1; });
 
   $("tabs").replaceChildren(...Object.keys(LABELS).map(k => {
     const b = document.createElement("button");
@@ -94,20 +99,36 @@ function render() {
     return b;
   }));
 
-  const shown = inRange.filter(a => cat === "all" || a.category === cat);
-  if ($("sort").value === "sig") shown.sort((x, y) => y.significance - x.significance || y.published_at.localeCompare(x.published_at));
-  $("list").replaceChildren(...shown.map(a => {
-    const el = document.createElement("article");
-    const link = document.createElement("a");
-    link.href = a.url; link.target = "_blank"; link.rel = "noopener noreferrer"; link.textContent = a.title;
-    const meta = document.createElement("div"); meta.className = "meta";
-    meta.textContent = `${a.source} · ${fmtDate(a.published_at)} · ${LABELS[a.category] || a.category} · ${a.significance}/5 `;
-    if (a.requires_review) { const s = document.createElement("span"); s.className = "star"; s.textContent = "★ nên đọc"; meta.append(s); }
-    const p = document.createElement("p"); p.textContent = a.summary;
-    el.append(link, meta, p);
-    return el;
-  }));
-  $("status").textContent = shown.length ? `${shown.length} bài` : "Không có bài nào.";
+  let shown = cat === "hackathons" ? hack : inDay.filter(a => cat === "all" || a.category === cat);
+  const byDate = (x, y) => y.published_at.localeCompare(x.published_at);
+  if ($("sort").value === "sig") shown.sort((x, y) => y.significance - x.significance || byDate(x, y));
+  else shown.sort(byDate);
+
+  // Top 5 of the day: highest significance, at most 2 per category so one topic cannot take the whole block.
+  let top = [];
+  if (day !== "all" && cat === "all" && !q) {
+    const n = {};
+    for (const a of [...shown].sort((x, y) => y.significance - x.significance || byDate(x, y))) {
+      if (top.length < 5 && (n[a.category] || 0) < 2) { top.push(a); n[a.category] = (n[a.category] || 0) + 1; }
+    }
+    shown = shown.filter(a => !top.includes(a));
+  }
+  $("top").hidden = !top.length;
+  $("topList").replaceChildren(...top.map(card));
+  $("list").replaceChildren(...shown.map(card));
+  $("status").textContent = shown.length + top.length ? `${shown.length + top.length} bài` : "Không có bài nào.";
+}
+
+function card(a) {
+  const el = document.createElement("article");
+  const link = document.createElement("a");
+  link.href = a.url; link.target = "_blank"; link.rel = "noopener noreferrer"; link.textContent = a.title;
+  const meta = document.createElement("div"); meta.className = "meta";
+  meta.textContent = `${a.source} · ${fmtDate(a.published_at)} · ${LABELS[a.category] || a.category} · ${a.significance}/5 `;
+  if (a.significance >= 5) { const s = document.createElement("span"); s.className = "star"; s.textContent = "★ nên đọc"; meta.append(s); }
+  const p = document.createElement("p"); p.textContent = a.summary;
+  el.append(link, meta, p);
+  return el;
 }
 
 fetch("data.json").then(r => r.json()).then(d => {

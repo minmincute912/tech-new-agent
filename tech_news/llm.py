@@ -57,7 +57,7 @@ def parse_ai(text, batch, now_iso):
         rows.append({"title": str(p.get("vietnamese_title") or a["title"]).strip(), "summary": summary,
                      "url": a["url"], "source": a["source"], "category": cat, "significance": sig,
                      "published_at": datetime.fromtimestamp(a["published"], timezone.utc).isoformat(),
-                     "processed_at": now_iso, "requires_review": sig >= 4})
+                     "processed_at": now_iso, "requires_review": sig >= 5})
     if not rows:
         raise ValueError("no valid rows in AI response")
     return rows

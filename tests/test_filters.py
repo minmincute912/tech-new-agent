@@ -43,3 +43,13 @@ def test_hackathon_needs_contest_word_and_lives_45_days():
 def test_per_source_cap():
     items = [entry(f"Kubernetes post {i}", source="InfoQ") for i in range(6)]
     assert len(news.select(items, set(), NOW)) == news.MAX_PER_SOURCE
+
+
+def test_opensource_capped_below_default():
+    CATEGORY_CAP = news.CATEGORY_CAP
+    now = 1_763_000_000
+    es = [{"title": f"repo{i}", "url": f"https://github.com/o/r{i}", "source": "GitHub Trending", "body": "x", "published": now}
+          for i in range(30)]
+    es += [{"title": f"r{i}", "url": f"https://github.com/p/r{i}", "source": "GitHub Open Source", "body": "x", "published": now}
+           for i in range(30)]
+    assert len([a for a in news.select(es, set(), now) if a["category"] == "opensource"]) == CATEGORY_CAP["opensource"]
