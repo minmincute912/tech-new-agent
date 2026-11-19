@@ -3,7 +3,7 @@ import re
 
 MAX_PER_CATEGORY = 12
 # Forced-source categories (GitHub Trending, Product Hunt...) always have candidates, so cap them lower to leave room for the rest.
-CATEGORY_CAP = {"opensource": 6, "build-in-public": 6, "ai-agents": 15}
+CATEGORY_CAP = {"opensource": 6, "build-in-public": 6, "ai-agents": 15, "releases": 6}
 MAX_PER_SOURCE = 3
 MAX_PER_FORCED_SOURCE = 6
 MAX_TOTAL = 80
@@ -23,15 +23,16 @@ def _table(rows):
     return [(re.compile(p), v) for p, v in rows]
 
 FORCED = _table([
-    (r"^(Product Hunt|Show HN|dev\.to #buildinpublic)$", "build-in-public"),
+    (r"^(Product Hunt|Show HN|dev\.to #buildinpublic|dev\.to #indiehackers)$", "build-in-public"),
+    (r"^Release: ", "releases"),
     (r"^(GitHub Trending|GitHub Open Source|GitHub Search|dev\.to #opensource|OpenSSF)$", "opensource"),
     (r"^(Google News:|Web Hackathon)", "hackathons"),
-    (r"^(Claude Code Releases|Anthropic .*)$", "ai-agents"),
+    (r"^(Anthropic .*|dev\.to #mcp)$", "ai-agents"),
 ])
 DEFAULT_BY_SOURCE = _table([
     (r"^(Google Cloud|AWS News|AWS Architecture Blog|Azure|Cloudflare|Kubernetes|CNCF|Docker|HashiCorp|dev\.to #kubernetes|dev\.to #aws)$", "cloud-infra"),
     (r"^(BleepingComputer|The Hacker News|Snyk|GitGuardian|Trail of Bits|GitHub Security Lab|AWS Security Blog|Datadog Security Labs|Unit 42|Krebs on Security|Chainguard|dev\.to #devsecops)$", "security"),
-    (r"^(Simon Willison|Latent Space|Hugging Face)$", "ai-agents"),
+    (r"^(Simon Willison|Latent Space|Hugging Face|LangChain|OpenAI News)$", "ai-agents"),
     (r"^(GitHub Blog|Vercel)$", "fullstack"),
 ])
 REQUIRE = {"hackathons": re.compile(r"hackathon|cuộc thi|thi lập trình|competition|contest", re.IGNORECASE)}

@@ -44,8 +44,6 @@ feeds:
   url: https://www.latent.space/feed
 - name: Hugging Face
   url: https://huggingface.co/blog/feed.xml
-- name: Claude Code Releases
-  url: https://github.com/anthropics/claude-code/releases.atom
 - name: Anthropic Skills Repo
   url: https://github.com/anthropics/skills/commits/main.atom
 - name: Anthropic News
@@ -104,3 +102,27 @@ feeds:
   url: https://dev.to/feed/tag/kubernetes
 - name: 'dev.to #aws'
   url: https://dev.to/feed/tag/aws
+- name: 'Release: Claude Code'
+  url: https://github.com/anthropics/claude-code/releases.atom
+- name: 'Release: MCP Python SDK'
+  url: https://github.com/modelcontextprotocol/python-sdk/releases.atom
+- name: 'Release: MCP TypeScript SDK'
+  url: https://github.com/modelcontextprotocol/typescript-sdk/releases.atom
+- name: 'Release: Anthropic SDK'
+  url: https://github.com/anthropics/anthropic-sdk-python/releases.atom
+- name: 'Release: OpenAI Codex'
+  url: https://github.com/openai/codex/releases.atom
+- name: 'Release: Gemini CLI'
+  url: https://github.com/google-gemini/gemini-cli/releases.atom
+- name: 'Release: LangGraph'
+  url: https://github.com/langchain-ai/langgraph/releases.atom
+- name: 'Release: Supabase'
+  url: https://github.com/supabase/supabase/releases.atom
+- name: LangChain
+  url: https://blog.langchain.dev/rss/
+- name: OpenAI News
+  url: https://openai.com/news/rss.xml
+- name: 'dev.to #indiehackers'
+  url: https://dev.to/feed/tag/indiehackers
+- name: 'dev.to #mcp'
+  url: https://dev.to/feed/tag/mcp

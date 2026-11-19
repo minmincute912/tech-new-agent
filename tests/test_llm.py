@@ -45,3 +45,11 @@ def test_all_providers_fail_returns_none():
     def call(p, s, u):
         raise RuntimeError("down")
     assert news.classify_batch(BATCH, "s", [{"name": "a"}], "t", call=call, wait=0) is None
+
+
+def test_parse_ai_keeps_kind_and_action_and_defaults_bad_kind():
+    text = '[{"id":1,"category":"security","vietnamese_title":"V","summary":"s","significance":3,"kind":"tool","action":"Thử ngay"},' \
+           '{"id":2,"category":"general","vietnamese_title":"V","summary":"s","significance":3,"kind":"bogus"}]'
+    rows = news.parse_ai(text, BATCH, "t")
+    assert (rows[0]["kind"], rows[0]["action"]) == ("tool", "Thử ngay")
+    assert (rows[1]["kind"], rows[1]["action"]) == ("news", "")

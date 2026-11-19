@@ -5,6 +5,11 @@ on:
     - cron: "17 0 * * *"
     - cron: "47 11 * * *"
   workflow_dispatch:
+    inputs:
+      draft:
+        description: Also send the weekly post ideas now
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -38,6 +43,25 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      # Sundays, evening run: build-in-public post ideas, sent privately to the owner.
+      - name: Weekly post ideas
+        if: github.event.schedule == '47 11 * * *'
+        continue-on-error: true
+        run: if [ "$(date -u +%u)" = 7 ]; then python -m tech_news draft; fi
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ALERT_CHAT_ID: ${{ secrets.TELEGRAM_ALERT_CHAT_ID }}
+      - name: Post ideas (manual)
+        if: github.event_name == 'workflow_dispatch' && inputs.draft
+        continue-on-error: true
+        run: python -m tech_news draft
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ALERT_CHAT_ID: ${{ secrets.TELEGRAM_ALERT_CHAT_ID }}
       - name: Commit data
         run: |
           git config user.name "news-bot"

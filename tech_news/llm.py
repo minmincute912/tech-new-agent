@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 
 import requests
 
-from .config import CATEGORIES, RETRY_WAIT
+from .config import CATEGORIES, KINDS, RETRY_WAIT
 
 
 def providers():
@@ -56,6 +56,8 @@ def parse_ai(text, batch, now_iso):
         cat = a["category"] if a["forced"] or p.get("category") not in CATEGORIES else p["category"]
         rows.append({"title": str(p.get("vietnamese_title") or a["title"]).strip(), "summary": summary,
                      "url": a["url"], "source": a["source"], "category": cat, "significance": sig,
+                     "kind": p.get("kind") if p.get("kind") in KINDS else "news",
+                     "action": str(p.get("action") or "").strip(),
                      "published_at": datetime.fromtimestamp(a["published"], timezone.utc).isoformat(),
                      "processed_at": now_iso, "requires_review": sig >= 5})
     if not rows:

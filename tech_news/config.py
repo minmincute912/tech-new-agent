@@ -9,6 +9,7 @@ FEEDS_FILE = ROOT / "config" / "feeds.yaml"
 REACH_FILE = ROOT / "config" / "reach.yaml"
 PROMPT_FILE = ROOT / "config" / "classify-prompt.md"
 SITE_TEMPLATE = ROOT / "web" / "index.html"
+DRAFT_PROMPT_FILE = ROOT / "config" / "draft-prompt.md"
 BRIEFS_FILE = DATA / "briefs.json"   # {"YYYY-MM-DD": {"text": ..., "n": ..., "sent": bool}}
 SITE_URL = os.getenv("SITE_URL", "https://tech-news-1rf.pages.dev")
 
@@ -18,4 +19,6 @@ GAP_SECONDS = 5      # pause between AI calls (free tier is ~15 requests/minute)
 RETRY_WAIT = 10      # seconds before the second attempt on the same provider
 SITE_DAYS = 30       # site shows the last 30 days (keeps data.json small); older rows stay in data/
 CATEGORIES = {"ai-agents", "security", "cloud-infra", "fullstack", "opensource",
-              "build-in-public", "hackathons", "general", "noise"}
+              "build-in-public", "hackathons", "releases", "general", "noise"}
+
+KINDS = {"tool", "tutorial", "case-study", "pricing", "launch", "news"}

@@ -53,3 +53,11 @@ def test_opensource_capped_below_default():
     es += [{"title": f"r{i}", "url": f"https://github.com/p/r{i}", "source": "GitHub Open Source", "body": "x", "published": now}
            for i in range(30)]
     assert len([a for a in news.select(es, set(), now) if a["category"] == "opensource"]) == CATEGORY_CAP["opensource"]
+
+
+def test_release_feeds_are_forced_into_releases():
+    from tech_news.filters import select
+    now = time.time()
+    e = {"title": "v2.1.0", "url": "https://github.com/x/y/releases/tag/v2.1.0", "source": "Release: Claude Code",
+         "body": "fixes", "published": now}
+    assert select([e], set(), now)[0]["category"] == "releases"

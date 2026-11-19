@@ -39,6 +39,9 @@
   h2 { font-size:1rem; margin:12px 0 8px; }
   #top article { border-color:var(--star); }
   p { margin:6px 0 0; font-size:.95rem; }
+  .act { margin:6px 0 0; font-size:.9rem; color:var(--accent); }
+  .save, #export { font:inherit; font-size:.8rem; color:var(--muted); background:none; border:1px solid var(--line); border-radius:6px; padding:2px 8px; cursor:pointer; margin-left:8px; }
+  .save[aria-pressed="true"] { color:var(--star); border-color:var(--star); }
   #status { color:var(--muted); font-size:.85rem; margin:8px 0; }
 </style>
 </head>
@@ -50,6 +53,8 @@
     <select id="sort" aria-label="Sắp xếp">
       <option value="date">Mới nhất</option><option value="sig">Quan trọng nhất</option>
     </select>
+    <select id="kind" aria-label="Loại bài"><option value="">Mọi loại</option><option value="tool">Công cụ</option><option value="tutorial">Hướng dẫn</option><option value="case-study">Case study</option><option value="pricing">Giá &amp; model</option><option value="launch">Ra mắt</option><option value="news">Tin</option></select>
+    <button id="export" type="button" hidden>Xuất Markdown</button>
   </div>
   <nav id="days" aria-label="Chọn ngày"></nav>
   <nav id="tabs" aria-label="Danh mục"></nav>
@@ -59,7 +64,8 @@
 </main>
 <script>
 const LABELS = { all:"Tất cả", "ai-agents":"AI & Agents", security:"Bảo mật", "cloud-infra":"Cloud & Infra",
-  fullstack:"Fullstack", opensource:"Mã nguồn mở", "build-in-public":"Build in Public", hackathons:"Hackathon", general:"Khác" };
+  fullstack:"Fullstack", opensource:"Mã nguồn mở", "build-in-public":"Build in Public", hackathons:"Hackathon", releases:"Cập nhật công cụ", saved:"Đã lưu", general:"Khác" };
+const KIND = { tool:"Công cụ", tutorial:"Hướng dẫn", "case-study":"Case study", pricing:"Giá & model", launch:"Ra mắt", news:"Tin" };
 const $ = (id) => document.getElementById(id);
 const root = document.documentElement, dark = matchMedia("(prefers-color-scheme: dark)");
 const isDark = () => root.dataset.theme ? root.dataset.theme === "dark" : dark.matches;
@@ -78,13 +84,16 @@ const VN = { timeZone: "Asia/Ho_Chi_Minh" };
 const dayOf = (iso) => new Date(iso).toLocaleDateString("sv-SE", VN);
 // Light categories stay out of a day's "Tất cả" list; they have their own tabs.
 const LIGHT = new Set(["opensource", "build-in-public"]);
+let saved = new Set();
+try { saved = new Set(JSON.parse(localStorage.getItem("saved") || "[]")); } catch {}
 const WD = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
 const fmtDate = (iso) => new Date(iso).toLocaleDateString("vi-VN", { day:"2-digit", month:"2-digit" });
 
 function render() {
   const q = $("q").value.trim().toLowerCase();
-  const match = (a) => !q || (a.title + " " + a.summary + " " + a.source).toLowerCase().includes(q);
+  const kind = $("kind").value;
+  const match = (a) => (!kind || a.kind === kind) && (!q || (a.title + " " + a.summary + " " + a.source).toLowerCase().includes(q));
   const perDay = {};
   all.filter(a => match(a) && !LIGHT.has(a.category)).forEach(a => perDay[a.day] = (perDay[a.day] || 0) + 1);
   const dayKeys = [...new Set(all.map(a => a.day))].sort().reverse();
@@ -106,8 +115,9 @@ function render() {
   const inDay = all.filter(a => (day === "all" || a.day === day) && match(a));
   const hack = all.filter(a => a.category === "hackathons" && match(a));
   const daily = inDay.filter(a => !(dayView && LIGHT.has(a.category)));
-  const counts = { all: daily.length, hackathons: hack.length };
-  inDay.forEach(a => { if (a.category !== "hackathons") counts[a.category] = (counts[a.category] || 0) + 1; });
+  const savedList = all.filter(a => saved.has(a.url) && match(a));
+  const counts = { all: daily.length, hackathons: hack.length, saved: savedList.length };
+  inDay.forEach(a => { if (a.category !== "hackathons" && a.category !== "saved") counts[a.category] = (counts[a.category] || 0) + 1; });
 
   $("tabs").replaceChildren(...Object.keys(LABELS).map(k => {
     const b = document.createElement("button");
@@ -118,7 +128,8 @@ function render() {
     return b;
   }));
 
-  let shown = cat === "hackathons" ? hack : cat === "all" ? daily : inDay.filter(a => a.category === cat);
+  $("export").hidden = cat !== "saved";
+  let shown = cat === "saved" ? savedList : cat === "hackathons" ? hack : cat === "all" ? daily : inDay.filter(a => a.category === cat);
   const byDate = (x, y) => y.published_at.localeCompare(x.published_at);
   if ($("sort").value === "sig") shown.sort((x, y) => y.significance - x.significance || byDate(x, y));
   else shown.sort(byDate);
@@ -145,8 +156,14 @@ function card(a) {
   const meta = document.createElement("div"); meta.className = "meta";
   meta.textContent = `${a.source} · ${fmtDate(a.published_at)} · ${LABELS[a.category] || a.category} · ${a.significance}/5 `;
   if (a.significance >= 5) { const s = document.createElement("span"); s.className = "star"; s.textContent = "★ nên đọc"; meta.append(s); }
+  const sv = document.createElement("button"); sv.type = "button"; sv.className = "save";
+  const paint = () => { sv.setAttribute("aria-pressed", String(saved.has(a.url))); sv.textContent = saved.has(a.url) ? "★ Đã lưu" : "☆ Lưu"; };
+  paint();
+  sv.onclick = () => { saved.has(a.url) ? saved.delete(a.url) : saved.add(a.url); try { localStorage.setItem("saved", JSON.stringify([...saved])); } catch {} render(); };
+  meta.append(sv);
   const p = document.createElement("p"); p.textContent = a.summary;
   el.append(link, meta, p);
+  if (a.action) { const t = document.createElement("p"); t.className = "act"; t.textContent = "→ " + a.action; el.append(t); }
   return el;
 }
 
@@ -157,7 +174,11 @@ fetch("data.json").then(r => r.json()).then(d => {
   render();
   document.title = "Tech News · cập nhật " + new Date(d.generated).toLocaleString("vi-VN");
 }).catch(() => { $("status").textContent = "Không tải được dữ liệu."; });
-["q", "sort"].forEach(id => $(id).addEventListener("input", render));
+$("export").onclick = () => {
+  const md = "# Đọc sau\n\n" + all.filter(a => saved.has(a.url)).map(a => `- [${a.title}](${a.url}) — ${a.source}\n  ${a.summary}` + (a.action ? `\n  → ${a.action}` : "")).join("\n");
+  const l = document.createElement("a"); l.href = URL.createObjectURL(new Blob([md], { type: "text/markdown" })); l.download = "doc-sau.md"; l.click();
+};
+["q", "sort", "kind"].forEach(id => $(id).addEventListener("input", render));
 </script>
 </body>
 </html>

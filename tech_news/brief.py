@@ -50,15 +50,17 @@ def format_message(day, top, site_url=SITE_URL, limit=4000):
     head = f"📰 <b>Tech News · {day[8:]}/{day[5:7]}</b>\n"
     foot = f'\n👉 <a href="{html.escape(site_url, quote=True)}">Xem tất cả tin</a>'
     lines = [f'{i}. <a href="{html.escape(r["url"], quote=True)}">{html.escape(r["title"])}</a> '
-             f'<i>({html.escape(r["source"])})</i>' for i, r in enumerate(top, 1)]
+             f'<i>({html.escape(r["source"])})</i>'
+             + (f'\n   → {html.escape(r["action"])}' if r.get("action") else "") for i, r in enumerate(top, 1)]
     while lines and len(head) + len("\n★ Nổi bật\n" + "\n".join(lines)) + len(foot) > limit:
         lines.pop()
     return head + ("\n★ Nổi bật\n" + "\n".join(lines) + "\n" if lines else "") + foot
 
 
-def send(text, token, chat_id):
+def send(text, token, chat_id, parse_mode="HTML"):
     r = requests.post(f"https://api.telegram.org/bot{token}/sendMessage", timeout=30,
-                      json={"chat_id": chat_id, "text": text, "parse_mode": "HTML", "disable_web_page_preview": True})
+                      json={"chat_id": chat_id, "text": text, **({"parse_mode": parse_mode} if parse_mode else {}),
+                            "disable_web_page_preview": True})
     r.raise_for_status()
 
 
@@ -73,7 +75,7 @@ def notify(send_fn=send, rows=None, day=None):
     if briefs.get(day, {}).get("sent"):
         print(f"digest for {day} already sent")
         return
-    top = top_of_day(rows if rows is not None else load_rows(months=1), day, 8)
+    top = top_of_day(rows if rows is not None else load_rows(months=1), day, 5)
     if not top:
         print(f"nothing to send for {day}")
         return

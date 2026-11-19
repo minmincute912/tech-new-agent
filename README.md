@@ -78,3 +78,11 @@ Tuỳ chọn: thêm secret `KYMA_API_KEY` và biến `KYMA_MODEL` để có fall
 - Workflow lỗi thì GitHub gửi email. Repo im lặng 60 ngày thì GitHub tắt lịch chạy; commit dữ liệu hằng ngày giữ nó sống.
 - Website hiển thị 30 ngày gần nhất, dữ liệu cũ hơn vẫn nằm trong `data/`.
 - Chi phí AI ước tính dưới $1/tháng (~80 bài/ngày); hạ tầng $0.
+
+## Dành cho indie dev
+
+- Mỗi bài có **loại** (công cụ, hướng dẫn, case study, giá & model, ra mắt) và dòng "→ việc nên làm"; trang có bộ lọc theo loại.
+- Tab **Cập nhật công cụ**: release của Claude Code, MCP SDK, Codex, Gemini CLI, LangGraph, Anthropic SDK, Supabase (feed `Release: …` trong `config/feeds.yaml`).
+- Nút **☆ Lưu** trên mỗi bài (lưu trong trình duyệt), tab **Đã lưu** và nút **Xuất Markdown**.
+- Bản tin Telegram hằng ngày: 5 bài nổi bật kèm việc nên làm.
+- Chủ nhật, lượt chạy tối: `python -m tech_news draft` gửi riêng cho bạn 3 ý tưởng bài build in public (cần secret `TELEGRAM_ALERT_CHAT_ID`). Chạy tay: Actions → daily → Run workflow → bật `draft`.
