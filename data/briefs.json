@@ -1,0 +1,6 @@
+{
+ "2026-11-19": {
+  "n": 13,
+  "text": "- Cập nhật ngay NGINX lên phiên bản mới để vá lỗ hổng RCE CVE-2026-123007 và kiểm tra các hệ thống Java trước nguy cơ từ Java4Shell.\n- OpenAI dùng API tự động tạo mã khai thác cho gần một nghìn lỗ hổng nhân Linux với chi phí 1,2 triệu USD.\n- AWS Lambda hỗ trợ GPU instance cho serverless inference qua vLLM và SGLang, giúp đơn giản hóa việc triển khai LLM không cần quản lý cluster.\n- Discord viết lại client Desktop và Mobile bằng nhân Rust chung và framework đồ họa tăng tốc GPU để tối ưu hiệu năng."
+ }
+}
