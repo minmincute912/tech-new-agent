@@ -57,7 +57,7 @@ const LABELS = { all:"Tất cả", "ai-agents":"AI & Agents", security:"Bảo m�
 const $ = (id) => document.getElementById(id);
 let all = [], cat = "all", day = decodeURIComponent(location.hash.slice(1)) || "";
 const VN = { timeZone: "Asia/Ho_Chi_Minh" };
-// An issue = the day the article was collected (VN time), so old-dated items like hackathons show in the issue that found them.
+// An issue = articles PUBLISHED that day (VN time). shortcut: old-dated items (e.g. hackathons found weeks later) sit on their publish day, find them under "Tất cả".
 const dayOf = (iso) => new Date(iso).toLocaleDateString("sv-SE", VN);
 const WD = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
@@ -111,7 +111,7 @@ function render() {
 }
 
 fetch("data.json").then(r => r.json()).then(d => {
-  all = d.articles.map(a => ({ ...a, day: dayOf(a.processed_at) }));
+  all = d.articles.map(a => ({ ...a, day: dayOf(a.published_at) }));
   $("status").textContent = "";
   render();
   document.title = "Tech News · cập nhật " + new Date(d.generated).toLocaleString("vi-VN");
